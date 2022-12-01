@@ -21,7 +21,8 @@ def redq_sac(env_name, seed=0, epochs='mbpo', steps_per_epoch=1000,
              utd_ratio=20, num_Q=10, num_min=2, q_target_mode='min',
              policy_update_delay=20,
              # following are bias evaluation related
-             evaluate_bias=True, n_mc_eval=1000, n_mc_cutoff=350, reseed_each_epoch=True
+             evaluate_bias=True, n_mc_eval=1000, n_mc_cutoff=350, reseed_each_epoch=True,
+             reset_midway = False
              ):
     """
     :param env_name: name of the gym environment
@@ -122,6 +123,7 @@ def redq_sac(env_name, seed=0, epochs='mbpo', steps_per_epoch=1000,
     o, r, d, ep_ret, ep_len = env.reset(), 0, False, 0, 0
 
     for t in range(total_steps):
+
         # get action from agent
         a = agent.get_exploration_action(o, env)
         # Step the env, get next observation, reward and done signal
@@ -192,6 +194,12 @@ def redq_sac(env_name, seed=0, epochs='mbpo', steps_per_epoch=1000,
 
             # flush logged information to disk
             sys.stdout.flush()
+
+
+            if reset_midway and epoch == 150:
+                agent.reset()
+
+
 
 if __name__ == '__main__':
     import argparse

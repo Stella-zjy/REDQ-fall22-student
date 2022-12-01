@@ -38,7 +38,9 @@ def do_smooth(x, smooth):
 
 def combine_data_in_seeds(seeds, column_name, skip=0, smooth=1):
     vals_list = []
+    # print(seeds)
     for d in seeds:
+        # print('*******',d)
         if isinstance(d,pd.DataFrame):
             vals_to_use = d[column_name].to_numpy().reshape(-1)
         else:
@@ -53,6 +55,7 @@ def combine_data_in_seeds(seeds, column_name, skip=0, smooth=1):
         if skip > 1:
             yhat = yhat[::skip]
         vals_list.append(yhat)
+    # print(vals_list)
     return np.concatenate(vals_list)
 
 def quick_plot(labels, data_folders, colors=DEFAULT_COLORS, linestyles=DEFAULT_LINESTYLES, envs=DEFAULT_ENVS, base_data_folder_path=DEFAULT_BASE_PATH,
@@ -67,14 +70,19 @@ def quick_plot(labels, data_folders, colors=DEFAULT_COLORS, linestyles=DEFAULT_L
             seeds = []
             data_folder_full_path = os.path.join(base_data_folder_path, data_folders_with_env[i])
             print("check data folder:", data_folder_full_path)
+            # for dir in os.listdir(data_folder_full_path):
+            #     print(dir)
             for subdir, dirs, files in os.walk(data_folder_full_path):
+                # print('file',files)
                 if 'progress.txt' in files:
                     # load progress file
                     progress_file_path = os.path.join(subdir, 'progress.txt')
                     seeds.append(pd.read_table(progress_file_path))
+                    # print("###progress_file_path", progress_file_path)
                     # seeds.append(np.genfromtxt(progress_file_path, dtype=float, delimiter='\t', names=True))
 
             label2seeds[label] = seeds
+            # print("##", seeds)
 
         save_name_with_env = save_name + '_' + env
         if not isinstance(y_value, list):

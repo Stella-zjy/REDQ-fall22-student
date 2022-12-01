@@ -86,6 +86,24 @@ class REDQSACAgent(object):
         self.q_target_mode = q_target_mode
         self.policy_update_delay = policy_update_delay
         self.device = device
+    
+    
+    def reset(self):
+        # set up networks
+        self.policy_net = TanhGaussianPolicy(self.obs_dim, self.act_dim, self.hidden_sizes, action_limit=self.act_limit).to(self.device)
+        self.q_net_list, self.q_target_net_list = [], []
+        for q_i in range(self.num_Q):
+            new_q_net = Mlp(self.obs_dim + self.act_dim, 1, self.hidden_sizes).to(self.device)
+            self.q_net_list.append(new_q_net)
+            new_q_target_net = Mlp(self.obs_dim + self.act_dim, 1, self.hidden_sizes).to(self.device)
+            new_q_target_net.load_state_dict(new_q_net.state_dict())
+            self.q_target_net_list.append(new_q_target_net)
+        # set up optimizers
+        self.policy_optimizer = optim.Adam(self.policy_net.parameters(), lr=self.lr)
+        self.q_optimizer_list = []
+        for q_i in range(self.num_Q):
+            self.q_optimizer_list.append(optim.Adam(self.q_net_list[q_i].parameters(), lr=self.lr))
+
 
     def __get_current_num_data(self):
         # used to determine whether we should get action from policy or take random starting actions

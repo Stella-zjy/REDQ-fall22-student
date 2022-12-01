@@ -1,0 +1,56 @@
+{
+    "alpha":	0.2,
+    "auto_alpha":	true,
+    "batch_size":	64,
+    "debug":	false,
+    "delay_update_steps":	"auto",
+    "device":	"cpu",
+    "env_name":	"HalfCheetah-v3",
+    "epochs":	300,
+    "evaluate_bias":	true,
+    "exp_name":	"exp_e300_q2_uf1_lr0.0003_g0.98_p0.995_ss5000_b64_h64_HalfCheetah-v3",
+    "gamma":	0.98,
+    "hidden_layer":	2,
+    "hidden_sizes":	[
+        64,
+        64
+    ],
+    "hidden_unit":	64,
+    "logger":	{
+        "<redq.utils.logx.EpochLogger object at 0x7fb79b13b040>":	{
+            "epoch_dict":	{},
+            "exp_name":	"exp_e300_q2_uf1_lr0.0003_g0.98_p0.995_ss5000_b64_h64_HalfCheetah-v3",
+            "first_row":	true,
+            "log_current_row":	{},
+            "log_headers":	[],
+            "output_dir":	"../data/exp_e300_q2_uf1_lr0.0003_g0.98_p0.995_ss5000_b64_h64_HalfCheetah-v3/exp_e300_q2_uf1_lr0.0003_g0.98_p0.995_ss5000_b64_h64_HalfCheetah-v3_s0",
+            "output_file":	{
+                "<_io.TextIOWrapper name='../data/exp_e300_q2_uf1_lr0.0003_g0.98_p0.995_ss5000_b64_h64_HalfCheetah-v3/exp_e300_q2_uf1_lr0.0003_g0.98_p0.995_ss5000_b64_h64_HalfCheetah-v3_s0/progress.txt' mode='w' encoding='UTF-8'>":	{
+                    "mode":	"w"
+                }
+            }
+        }
+    },
+    "logger_kwargs":	{
+        "exp_name":	"exp_e300_q2_uf1_lr0.0003_g0.98_p0.995_ss5000_b64_h64_HalfCheetah-v3",
+        "output_dir":	"../data/exp_e300_q2_uf1_lr0.0003_g0.98_p0.995_ss5000_b64_h64_HalfCheetah-v3/exp_e300_q2_uf1_lr0.0003_g0.98_p0.995_ss5000_b64_h64_HalfCheetah-v3_s0"
+    },
+    "lr":	0.0003,
+    "max_ep_len":	1000,
+    "n_evals_per_epoch":	1,
+    "n_mc_cutoff":	350,
+    "n_mc_eval":	1000,
+    "num_Q":	2,
+    "num_min":	2,
+    "policy_update_delay":	20,
+    "polyak":	0.995,
+    "q_target_mode":	"min",
+    "replay_size":	1000000,
+    "reseed_each_epoch":	true,
+    "seed":	0,
+    "start_steps":	5000,
+    "steps_per_epoch":	1000,
+    "target_entropy":	"mbpo",
+    "total_steps":	300001,
+    "utd_ratio":	1
+}
