@@ -22,7 +22,7 @@ def redq_sac(env_name, seed=0, epochs='mbpo', steps_per_epoch=1000,
              policy_update_delay=20,
              # following are bias evaluation related
              evaluate_bias=True, n_mc_eval=1000, n_mc_cutoff=350, reseed_each_epoch=True,
-             save_interval=25,
+             save_interval=25
              ):
     """
     :param env_name: name of the gym environment
