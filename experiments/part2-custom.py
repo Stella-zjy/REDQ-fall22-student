@@ -24,7 +24,7 @@ if __name__ == '__main__':
                 'start_steps', 'ss', [5000],
                 'batch_size', 'b', [128],
                 'hidden_unit', 'h', [128],
-                'reset_midway', 'rm', [True]
+                'reset_midway', 'reset', [True]
                 ]
 
     indexes, actual_setting, total, exp_name_full = get_setting_and_exp_name(settings, args.setting, exp_prefix)

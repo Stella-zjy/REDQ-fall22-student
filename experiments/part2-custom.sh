@@ -7,7 +7,7 @@
 #SBATCH --mail-type=ALL # select which email types will be sent
 #SBATCH --mail-user=jz3676@nyu.edu # NOTE: put your netid here if you want emails
 
-#SBATCH --array=0-7 # here the number depends on number of tasks in the array, e.g. 0-11 will create 12 tasks
+#SBATCH --array=0-3 # here the number depends on number of tasks in the array, e.g. 0-11 will create 12 tasks
 #SBATCH --output=logs/%A_%a.out # %A is SLURM_ARRAY_JOB_ID, %a is SLURM_ARRAY_TASK_ID
 #SBATCH --error=logs/%A_%a.err
 
@@ -34,5 +34,5 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/nvidia/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/workspace/.mujoco/mujoco210/bin
 export MUJOCO_GL=egl
 cd /workspace/REDQ/experiments/
-python part2-sac.py --setting ${SLURM_ARRAY_TASK_ID}
+python part2-custom.py --setting ${SLURM_ARRAY_TASK_ID}
 "

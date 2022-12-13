@@ -89,7 +89,9 @@ def quick_plot(labels, data_folders, colors=DEFAULT_COLORS, linestyles=DEFAULT_L
             y_value = [y_value,]
 
         for y_to_plot in y_value:
+            # print('#', label2seeds)
             for i, (label, seeds) in enumerate(label2seeds.items()):
+                # print('##', i, (label, seeds))
                 x = combine_data_in_seeds(seeds, 'TotalEnvInteracts')
                 y = combine_data_in_seeds(seeds, y_to_plot, smooth=DEFAULT_SMOOTH)
                 ax = sns.lineplot(x=x, y=y, n_boot=10, label=label, color=colors[i], linestyle=linestyles[i], linewidth = 2)

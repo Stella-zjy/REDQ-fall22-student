@@ -7,7 +7,7 @@ import joblib
 import numpy as np
 import random
 
-def render_agent(agent, test_env, max_ep_len, logger, n_eval=1, save_folder='./', save_name_prefix=''):
+def render_agent(agent, test_env, max_ep_len, logger, n_eval=1, save_folder='./', save_name_prefix='', action_noise = False, epsilon = 0):
     """
     This will test the agent's performance by running <n_eval> episodes
     During the runs, the agent should only take deterministic action
@@ -22,16 +22,20 @@ def render_agent(agent, test_env, max_ep_len, logger, n_eval=1, save_folder='./'
     :param save_name_prefix: name prefix of saved image files
     :return: test return for each episode as a numpy array
     """
-    epsilon = 0.2
 
     ep_return_list = np.zeros(n_eval)
     for j in range(n_eval):
         o, r, d, ep_ret, ep_len = test_env.reset(), 0, False, 0, 0
         while not (d or (ep_len == max_ep_len)):
 
-            if random.random() < epsilon:
-                # Apply action noise
-                a = agent.get_exploration_action(o, test_env)
+            if action_noise:
+                if random.random() < epsilon:
+                    # Apply action noise
+                    a = agent.get_exploration_action(o, test_env)
+                else:
+                    # Take deterministic actions at test time
+                    a = agent.get_test_action(o)
+            
             else:
                 # Take deterministic actions at test time
                 a = agent.get_test_action(o)
@@ -50,27 +54,60 @@ def render_agent(agent, test_env, max_ep_len, logger, n_eval=1, save_folder='./'
             logger.store(TestEpRet=ep_ret, TestEpLen=ep_len)
     return ep_return_list
 
-exp_name = 'exp_e300_q2_uf1_lr0.0003_g0.99_p0.995_ss5000_b128_h128'
+# exp_name = 'exp_e300_q2_uf1_lr0.0003_g0.99_p0.995_ss5000_b128_h128'
+# seed = 1
+# env_name = 'Hopper-v3'
+# # env_name = 'HalfCheetah-v3'
+# epoch = 300
+# # save_name_prefix = 'sac_b128_h128_ep300'
+# save_name_prefix = 'sac_b128_h128_ep300_noise_e0.5'
+
+# exp_env_name = '%s_%s' % (exp_name, env_name)
+# seed_name = '%s_s%d' % (exp_env_name, seed)
+# exp_subfolder_path = osp.join('../data', exp_env_name, seed_name)
+# vars_path = osp.join(exp_subfolder_path, 'vars%d.pkl' % epoch)
+# print(vars_path)
+# state_dict = joblib.load(vars_path)
+# agent = state_dict['agent']
+
+# e = gym.make(env_name)
+# e.reset()
+
+
+
+# Perform epsilon-greedy if action noise is introduced
+action_noise = False
+epsilon = 0.5
+
 seed = 1
-env_name = 'Hopper-v3'
-# env_name = 'HalfCheetah-v3'
-epoch = 300
-# save_name_prefix = 'sac_b128_h128_ep300'
-save_name_prefix = 'sac_b128_h128_ep300_noise'
-# epoch = 100
-# save_name_prefix = 'sac_b128_h128_ep100'
-# epoch = 1
-# save_name_prefix = 'sac_b128_h128_ep1'
+env_names = ['Hopper-v3', 'HalfCheetah-v3']
+# epochs = [300, 100, 1]
+epochs = [300]
 
-exp_env_name = '%s_%s' % (exp_name, env_name)
-seed_name = '%s_s%d' % (exp_env_name, seed)
-exp_subfolder_path = osp.join('../data', exp_env_name, seed_name)
-vars_path = osp.join(exp_subfolder_path, 'vars%d.pkl' % epoch)
-print(vars_path)
-state_dict = joblib.load(vars_path)
-agent = state_dict['agent']
+for env_name in env_names:
+    for epoch in epochs:
+        # exp_name = 'exp_e300_q2_uf1_lr0.0003_g0.99_p0.995_ss5000_b128_h128'
+        exp_name = 'exp_e300_q2_uf5_lr0.0003_g0.99_p0.995_ss5000_b128_h128_resetTrue'
+        # save_name_prefix = 'sac_b128_h128_ep%d' % epoch
+        save_name_prefix = 'sac_b128_h128_ep%d' % epoch
 
-e = gym.make(env_name)
-e.reset()
+        exp_env_name = '%s_%s' % (exp_name, env_name)
+        seed_name = '%s_s%d' % (exp_env_name, seed)
+        exp_subfolder_path = osp.join('../data', exp_env_name, seed_name)
+        vars_path = osp.join(exp_subfolder_path, 'vars%d.pkl' % epoch)
+        print(vars_path)
+        state_dict = joblib.load(vars_path)
+        agent = state_dict['agent']
 
-render_agent(agent, e, 1000, None, 1, exp_subfolder_path, save_name_prefix)
+        e = gym.make(env_name)
+        e.reset()
+
+        # Render and Record Test Return
+        test_return = render_agent(agent, e, 1000, None, 1, exp_subfolder_path, save_name_prefix, action_noise, epsilon)
+        print('==========================================')
+        print('environment: ', env_name)
+        print('epoch trained: ', epoch)
+        print('action noise: ', action_noise)
+        print('test return: ', test_return)
+        print('\n')
+        
